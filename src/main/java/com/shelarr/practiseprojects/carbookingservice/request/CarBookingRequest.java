@@ -4,60 +4,47 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class CarBookingRequest {
+public final class CarBookingRequest {
 
-    private String driverId;
+    private final String driverId;
 
-    private String userIdName;
+    private final String userIdName;
 
-    private Time bookingFrom;
+    private final Time bookingFrom;
 
-    private Time bookingTo;
+    private final Time bookingTo;
 
-    public CarBookingRequest(String driverId, String userIdName, String bookingFrom, String bookingTo) throws ParseException {
-        this.driverId = driverId;
-        this.userIdName = userIdName;
-
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:MM");
-
-        long bookingFromTime = sdf.parse(bookingFrom).getTime();
-        this.bookingFrom = new Time(bookingFromTime);
-        ;
-
-        long bookingToTime = sdf.parse(bookingTo).getTime();
-        this.bookingTo = new Time(bookingToTime);
+    public CarBookingRequest(Builder builder) {
+        this.driverId = builder.driverId;
+        this.userIdName = builder.userIdName;
+        this.bookingFrom = convertToTime(builder.bookingFrom);
+        this.bookingTo = convertToTime(builder.bookingTo);
     }
 
     public String getDriverId() {
         return driverId;
     }
 
-    public void setDriverId(String driverId) {
-        this.driverId = driverId;
-    }
-
     public String getUserIdName() {
         return userIdName;
-    }
-
-    public void setUserIdName(String userIdName) {
-        this.userIdName = userIdName;
     }
 
     public Time getBookingFrom() {
         return bookingFrom;
     }
 
-    public void setBookingFrom(Time bookingFrom) {
-        this.bookingFrom = bookingFrom;
-    }
-
     public Time getBookingTo() {
         return bookingTo;
     }
 
-    public void setBookingTo(Time bookingTo) {
-        this.bookingTo = bookingTo;
+    private Time convertToTime(String timeString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:MM");
+            long time = sdf.parse(timeString).getTime();
+            return new Time(time);
+        } catch (ParseException ex) {
+            throw new RuntimeException("Invalid format for booking time");
+        }
     }
 
     @Override
@@ -68,6 +55,49 @@ public class CarBookingRequest {
                 ", bookingFrom=" + bookingFrom +
                 ", bookingTo=" + bookingTo +
                 '}';
+    }
+
+    public static class Builder {
+
+        private String driverId;
+
+        private String userIdName;
+
+        private String bookingFrom;
+
+        private String bookingTo;
+
+        private Builder() {
+        }
+
+        public static Builder newInstance() {
+            return new Builder();
+        }
+
+        public Builder setDriverId(String driverId) {
+            this.driverId = driverId;
+            return this;
+        }
+
+        public Builder setUserIdName(String userIdName) {
+            this.userIdName = userIdName;
+            return this;
+        }
+
+        public Builder setBookingFrom(String bookingFrom) {
+            this.bookingFrom = bookingFrom;
+            return this;
+        }
+
+        public Builder setBookingTo(String bookingTo) {
+            this.bookingTo = bookingTo;
+            return this;
+        }
+
+        public CarBookingRequest build() {
+            return new CarBookingRequest(this);
+        }
+
     }
 
 }

@@ -1,17 +1,17 @@
 package com.shelarr.practiseprojects.carbookingservice.service;
 
 import com.shelarr.practiseprojects.carbookingservice.dao.CarAllotmentsDao;
+import com.shelarr.practiseprojects.carbookingservice.databuilder.CarAllotmentBuilder;
 import com.shelarr.practiseprojects.carbookingservice.dto.Car;
 import com.shelarr.practiseprojects.carbookingservice.dto.CarAllotment;
 import com.shelarr.practiseprojects.carbookingservice.dto.Driver;
 import com.shelarr.practiseprojects.carbookingservice.exception.DBServiceException;
-import com.shelarr.practiseprojects.carbookingservice.databuilder.CarAllotmentBuilder;
+import com.shelarr.practiseprojects.carbookingservice.request.validator.CarAvailabilityValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Component
@@ -28,10 +28,10 @@ public class CarAllotmentService {
     @Autowired
     private DriverDetailsService driverDetailsService;
 
-    @Resource
+    @Autowired
     private CarAvailabilityValidator carAvailabilityValidator;
 
-    @Resource
+    @Autowired
     private CarAllotmentBuilder carAllotmentBuilder;
 
     public void allotCarToDriver(String regNumber, String driverLicenseNo) {
@@ -39,12 +39,9 @@ public class CarAllotmentService {
 
             Car car = carDetailsService.getCarDetails(regNumber);
             Driver driver = driverDetailsService.getDriverDetails(driverLicenseNo);
-
             if (carAvailabilityValidator.isCarAvailableInTimeSlot(car, driver)) {
                 CarAllotment carAllotment = carAllotmentBuilder.createCarAllotment(car, driver);
                 carAllotmentsDao.insert(carAllotment);
-            } else {
-                throw new Exception("Driver's work time slot doesn't match with Car available time");
             }
 
         } catch (Exception ex) {
@@ -55,7 +52,7 @@ public class CarAllotmentService {
 
     }
 
-    public List<CarAllotment> getAllDetails() {
+    public List<CarAllotment> getAllAllotmentDetails() {
         return carAllotmentsDao.findAll();
     }
 
@@ -63,7 +60,13 @@ public class CarAllotmentService {
         return carAllotmentsDao.deleteByDriverLicenseNumber(driverLicenseNumber) != 0 ? true : false;
     }
 
-    public CarAllotment getAllotMentDetails(String driverId) {
-        return carAllotmentsDao.getAllotmentByDealerId(Long.valueOf(driverId));
+    public CarAllotment getAllotmentDetails(String driverId) {
+        CarAllotment carAllotment = null;
+        try {
+            carAllotment = carAllotmentsDao.getAllotmentByDealerId(Long.valueOf(driverId));
+        } catch (Exception e) {
+        }
+        return carAllotment;
     }
+
 }

@@ -7,13 +7,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class DriverInfoController {
 
     private static final String FAILURE_RESPONSE = "{\"status\":\"failure\"}";
 
-    @Resource
+    @Autowired
     private DriverDetailsService driverDetailsService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/driverDetails/{licenseNumber}")

@@ -17,8 +17,8 @@ public class CarDetailsService {
         return carDetailsDao.findByRegNumber(regNumber);
     }
 
-    public Car getCarDetailsById(String regNumber) {
-        return carDetailsDao.findByRegNumber(regNumber);
+    public Car getCarDetailsById(String id) {
+        return carDetailsDao.findById(Long.valueOf(id));
     }
 
     public List<Car> getAllCarsDetails() {

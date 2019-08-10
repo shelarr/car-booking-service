@@ -20,6 +20,7 @@ public class CarBookingRowMapper implements RowMapper<CarBooking> {
         carbooking.setDriverLicenseNumber(resultSet.getString("driverLicenseNumber"));
         carbooking.setBookingFrom(resultSet.getTime("bookingFrom"));
         carbooking.setBookingTo(resultSet.getTime("bookingTo"));
+        carbooking.setBookingCharge(resultSet.getBigDecimal("bookingCharge"));
         carbooking.setActive(resultSet.getBoolean("isActive"));
         carbooking.setBookingStatus(resultSet.getString("bookingStatus"));
         return carbooking;

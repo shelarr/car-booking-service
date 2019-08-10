@@ -12,13 +12,13 @@ public class RequestValidatorConfig {
     @Bean
     public List<BookingRequestValidator> requestValidators() {
         List<BookingRequestValidator> requestValidators = new ArrayList<>();
-        requestValidators.add(driverValidator());
+        requestValidators.add(driverAllocationValidator());
         requestValidators.add(bookingTimeAvailabilityValidator());
         return requestValidators;
     }
 
-    @Bean
-    public BookingRequestValidator driverValidator() {
+    @Bean(name = "driverAllocationValidator")
+    public BookingRequestValidator driverAllocationValidator() {
         return new DriverAllocationValidator();
     }
 

@@ -1,4 +1,4 @@
-package com.shelarr.practiseprojects.carbookingservice.service;
+package com.shelarr.practiseprojects.carbookingservice.request.validator;
 
 import com.shelarr.practiseprojects.carbookingservice.dao.CarAllotmentsDao;
 import com.shelarr.practiseprojects.carbookingservice.dto.Car;
@@ -15,6 +15,7 @@ import java.util.List;
 public class CarAvailabilityValidator {
 
     private static final String ALLOCATION_SLOT_NOT_AVAILABLE = "Car is already allocated to another driver in available time slot";
+
     @Autowired
     private CarAllotmentsDao carAllotmentsDao;
 
@@ -47,7 +48,6 @@ public class CarAvailabilityValidator {
 
     private boolean checKForOverlap(LocalTime carAllotmentFrom, LocalTime carAllotmentTo,
                                     LocalTime driverAvailableFrom, LocalTime driverAvailableTo) {
-
         return (driverAvailableFrom.isAfter(carAllotmentFrom) && driverAvailableFrom.isBefore(carAllotmentTo)) ||
                 (driverAvailableTo.isAfter(carAllotmentFrom) && driverAvailableTo.isBefore(carAllotmentTo));
 

@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -51,12 +50,13 @@ public class CarBookingsDao {
         return jdbcTemplate.update(UPDATE_BOOKING_STATUS, new Object[]{bookingStatus, bookingId});
     }
 
-    public List<CarBooking> findActiveBookingForDriver(Long driverId) {
-        List<CarBooking> activeBookings = new ArrayList<>();
+    public CarBooking findActiveBookingForDriver(Long driverId) {
+        CarBooking carBooking = null;
         try {
-            activeBookings = jdbcTemplate.query(FIND_ACTIVE_CAR_BOOKING_FOR_DRIVER, new Object[]{driverId}, new CarBookingRowMapper());
+            carBooking = jdbcTemplate.queryForObject(FIND_ACTIVE_CAR_BOOKING_FOR_DRIVER, new Object[]{driverId},
+                    new BeanPropertyRowMapper<>(CarBooking.class));
         } catch (Exception ex) {
         }
-        return activeBookings;
+        return carBooking;
     }
 }

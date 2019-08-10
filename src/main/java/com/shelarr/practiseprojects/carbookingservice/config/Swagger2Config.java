@@ -23,8 +23,8 @@ public class Swagger2Config {
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("Car Booking REST API")
+        return new ApiInfoBuilder().title("Car Bookings and Management REST API")
+                .description("Spring Boot Rest API")
                 .contact(new Contact("Rahul Shelar", "https://www.linkedin.com/in/rahul-shelar-365aa39a/", "shelar.rb@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")

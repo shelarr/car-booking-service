@@ -7,12 +7,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +27,9 @@ public class CarInfoController {
     private static final String SUCCESS_RESPONSE = "{\"status\":\"success\"}";
 
     private static final String FAILURE_RESPONSE = "{\"status\":\"failure\"}";
-
-    @Resource
-    private CarDetailsService carDetailsService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CarInfoController.class);
+    @Autowired
+    private CarDetailsService carDetailsService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/carDetails/{regNumber}")
     @ApiOperation(httpMethod = "GET", value = "fetch Car information from system")

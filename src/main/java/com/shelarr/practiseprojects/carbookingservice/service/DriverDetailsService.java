@@ -13,8 +13,8 @@ public class DriverDetailsService {
     @Autowired
     private DriverDetailsDao driverDetailsDao;
 
-    public Driver getDriverDetails(String regNumber) {
-        return driverDetailsDao.findByLicenseNumber(regNumber);
+    public Driver getDriverDetails(String licenseNumber) {
+        return driverDetailsDao.findByLicenseNumber(licenseNumber);
     }
 
     public Driver getDriverDetailsById(String id) {
@@ -33,10 +33,9 @@ public class DriverDetailsService {
         return driverDetailsDao.update(driver) != 0 ? true : false;
     }
 
-    public boolean deleteDriverDetails(String regNumber) {
-        return driverDetailsDao.deleteByLicenseNumber(regNumber) != 0 ? true : false;
+    public boolean deleteDriverDetails(String licenseNumber) {
+        return driverDetailsDao.deleteByLicenseNumber(licenseNumber) != 0 ? true : false;
     }
-
 
 }
 

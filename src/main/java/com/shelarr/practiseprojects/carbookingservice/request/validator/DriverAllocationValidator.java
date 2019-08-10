@@ -9,15 +9,13 @@ import com.shelarr.practiseprojects.carbookingservice.service.CarAllotmentServic
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
 public class DriverAllocationValidator implements BookingRequestValidator {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(DriverAllocationValidator.class);
 
     private static final String INVALID_DRIVER_MESSAGE = "Requested driver dont have any alloted a Car.Please Try with another driver";
 
-    private static final String DRIVER_BOOKED_MESSAGE = "Requested driver already Booked. Please Try with another driver";
+    private static final String DRIVER_ALREADY_BOOKED_MESSAGE = "Requested driver already Booked. Please Try with another driver";
 
     @Autowired
     private CarAllotmentService carAllotmentService;
@@ -28,18 +26,20 @@ public class DriverAllocationValidator implements BookingRequestValidator {
     @Override
     public void validate(CarBookingRequest carBookingRequest) {
         String driverId = carBookingRequest.getDriverId();
-        try {
-            CarAllotment carAllotment = carAllotmentService.getAllotMentDetails(driverId);
-        } catch (Exception ex) {
-            LOGGER.info(INVALID_DRIVER_MESSAGE);
+
+        CarAllotment carAllotment = carAllotmentService.getAllotmentDetails(driverId);
+
+        if (carAllotment == null) {
+            LOGGER.info("Error while processing Booking request.  " + INVALID_DRIVER_MESSAGE);
             throw new BookingProcessingExcpetion(INVALID_DRIVER_MESSAGE);
         }
 
-        List<CarBooking> activeCarBookings = carBookingsDao.findActiveBookingForDriver(Long.valueOf(driverId));
+        CarBooking carBooking = carBookingsDao.findActiveBookingForDriver(Long.valueOf(driverId));
 
-        if (activeCarBookings.size() > 0) {
-            LOGGER.info(DRIVER_BOOKED_MESSAGE);
-            throw new BookingProcessingExcpetion(DRIVER_BOOKED_MESSAGE);
+        if (carBooking != null && String.valueOf(carBooking.getDriverId()).equals(driverId)
+                && carBooking.getActive()) {
+            LOGGER.info("Error while processing Booking request.  " + DRIVER_ALREADY_BOOKED_MESSAGE);
+            throw new BookingProcessingExcpetion(DRIVER_ALREADY_BOOKED_MESSAGE);
         }
     }
 

@@ -6,8 +6,8 @@ import com.shelarr.practiseprojects.carbookingservice.request.CarBookingRequest;
 import com.shelarr.practiseprojects.carbookingservice.service.CarAllotmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.time.LocalTime;
 
 public class BookingTimeAvailabilityValidator implements BookingRequestValidator {
@@ -16,36 +16,35 @@ public class BookingTimeAvailabilityValidator implements BookingRequestValidator
 
     private static final String SLOT_NOT_AVAILABLE = "time slot is not available for request ";
 
-    @Resource
+    @Autowired
     private CarAllotmentService carAllotmentService;
 
     @Override
     public void validate(CarBookingRequest carBookingRequest) {
 
-        LocalTime bookingfromTime = carBookingRequest.getBookingFrom().toLocalTime();
+        LocalTime bookingFromTime = carBookingRequest.getBookingFrom().toLocalTime();
         LocalTime bookingToTime = carBookingRequest.getBookingTo().toLocalTime();
 
-        CarAllotment carAllotment = carAllotmentService.getAllotMentDetails(carBookingRequest.getDriverId());
-
-
+        CarAllotment carAllotment = carAllotmentService.getAllotmentDetails(carBookingRequest.getDriverId());
         LocalTime driverFromTime = carAllotment.getDriverAvailableFrom().toLocalTime();
         LocalTime driverToTime = carAllotment.getDriverAvailableTo().toLocalTime();
 
-        System.out.println("Checking !");
-        System.out.println("bookingfromTime" + bookingfromTime);
-        System.out.println("driverFromTime" + driverFromTime);
-        System.out.println("bookingToTime" + bookingToTime);
-        System.out.println("driverToTime" + driverToTime);
-
-        if (bookingfromTime.isAfter(driverFromTime) && bookingToTime.isBefore(driverToTime)) {
+        if (isTimeSlotAvailable(bookingFromTime, bookingToTime,
+                driverFromTime, driverToTime)) {
             LOGGER.info("Time Slot is available for carBookingRequest " + carBookingRequest.toString());
-            System.out.println("We are Good");
+
         } else {
             LOGGER.info(SLOT_NOT_AVAILABLE + carBookingRequest.toString());
-            System.out.println("CHECK HERE !");
             throw new BookingProcessingExcpetion(SLOT_NOT_AVAILABLE + carBookingRequest.toString());
         }
 
+    }
+
+    private boolean isTimeSlotAvailable(LocalTime bookingFromTime, LocalTime bookingToTime,
+                                        LocalTime driverFromTime, LocalTime driverToTime) {
+
+        return (bookingFromTime.isAfter(driverFromTime) || bookingFromTime.equals(driverFromTime)) &&
+                bookingToTime.isBefore(driverToTime) || bookingToTime.equals(driverToTime);
     }
 
 }
