@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class BookingTimingDataBuilder implements BookingDataBuilder {
 
-    private int perHourCharge = 100;
+    private static final int perHourCharge = 100;
 
 
     @Override
