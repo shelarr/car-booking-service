@@ -8,7 +8,7 @@ public class CarBookingMessage {
 
     private CarBooking carBooking;
 
-    public CarBookingMessage(){
+    public CarBookingMessage() {
         this.carBooking = new CarBooking();
     }
 

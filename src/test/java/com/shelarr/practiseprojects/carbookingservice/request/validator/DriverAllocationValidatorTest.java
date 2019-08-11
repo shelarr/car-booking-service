@@ -2,7 +2,6 @@ package com.shelarr.practiseprojects.carbookingservice.request.validator;
 
 import com.shelarr.practiseprojects.carbookingservice.dao.CarBookingsDao;
 import com.shelarr.practiseprojects.carbookingservice.dto.CarAllotment;
-import com.shelarr.practiseprojects.carbookingservice.dto.CarBooking;
 import com.shelarr.practiseprojects.carbookingservice.exception.BookingProcessingExcpetion;
 import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessage;
 import com.shelarr.practiseprojects.carbookingservice.service.CarAllotmentService;

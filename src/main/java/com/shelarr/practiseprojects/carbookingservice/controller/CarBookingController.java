@@ -32,11 +32,9 @@ public class CarBookingController {
     private static final String BOOKING__SUCCESS_MESSAGE = "Booking is processed !. BookingId for future reference : ";
 
     private static final String CHECK_FOR_CONFIRMATION = "Check here for Confirmation status.";
-
+    private static final String baseDomainUrl = "http://localhost:8080/";
     @Autowired
     private CarBookingService carBookingService;
-
-    private static final String baseDomainUrl = "http://localhost:8080/";
 
     //    Booking by driverId, since requirement is to book a Driver.
     @RequestMapping(method = RequestMethod.POST, value = "/bookACar/{driverId}")
@@ -59,16 +57,16 @@ public class CarBookingController {
 
         response.put("SUCCESS", BOOKING__SUCCESS_MESSAGE + bookingId);
         String confirmation_Link = createConfirmationLink(bookingId);
-        response.put("CHECK_FOR_CONFIRMATION", confirmation_Link );
+        response.put("CHECK_FOR_CONFIRMATION", confirmation_Link);
 
         return ResponseEntity.ok(response);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getAll")
     @ApiOperation(httpMethod = "GET", value = "fetches all Bookings, if active=false")
-    public ResponseEntity getAllBookings(@ApiParam(value = "active") @RequestParam(required = false)  boolean active) {
+    public ResponseEntity getAllBookings(@ApiParam(value = "active") @RequestParam(required = false) boolean active) {
         List<CarBooking> activeBookings;
-        if(active) {
+        if (active) {
             activeBookings = carBookingService.getAllActiveBookings();
         } else {
             activeBookings = carBookingService.getAllBookings();

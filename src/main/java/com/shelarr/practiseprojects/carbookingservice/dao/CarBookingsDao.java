@@ -71,7 +71,7 @@ public class CarBookingsDao {
     public List<CarBooking> findAllActiveForDriver(Long driverId) {
         List<CarBooking> carBookings;
         try {
-            carBookings =  jdbcTemplate.query(FIND_ALL_ACTIVE_BOOKINGS_FOR_DRIVER, new Object[]{driverId}, new CarBookingRowMapper());
+            carBookings = jdbcTemplate.query(FIND_ALL_ACTIVE_BOOKINGS_FOR_DRIVER, new Object[]{driverId}, new CarBookingRowMapper());
         } catch (Exception ex) {
             carBookings = new ArrayList<>();
         }

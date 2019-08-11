@@ -1,9 +1,7 @@
 package com.shelarr.practiseprojects.carbookingservice.databuilder;
 
 import com.shelarr.practiseprojects.carbookingservice.dto.CarAllotment;
-import com.shelarr.practiseprojects.carbookingservice.dto.CarBooking;
 import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessage;
-import com.shelarr.practiseprojects.carbookingservice.request.CarBookingRequest;
 import com.shelarr.practiseprojects.carbookingservice.service.CarAllotmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 

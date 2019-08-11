@@ -27,7 +27,7 @@ public class CarAvailabilityValidator {
             return true;
         }
 
-        carAllotments.stream().forEach( carAllotment -> {
+        carAllotments.stream().forEach(carAllotment -> {
 
             LocalTime carAllotmentFrom = carAllotment.getDriverAvailableFrom().toLocalTime();
             LocalTime carAllotmentTo = carAllotment.getDriverAvailableTo().toLocalTime();

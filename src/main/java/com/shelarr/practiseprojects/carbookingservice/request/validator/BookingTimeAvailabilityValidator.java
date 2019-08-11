@@ -2,7 +2,6 @@ package com.shelarr.practiseprojects.carbookingservice.request.validator;
 
 import com.shelarr.practiseprojects.carbookingservice.dto.CarAllotment;
 import com.shelarr.practiseprojects.carbookingservice.dto.CarBooking;
-import com.shelarr.practiseprojects.carbookingservice.exception.AllocationProcessingException;
 import com.shelarr.practiseprojects.carbookingservice.exception.BookingProcessingExcpetion;
 import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessage;
 import com.shelarr.practiseprojects.carbookingservice.service.CarAllotmentService;
@@ -55,7 +54,7 @@ public class BookingTimeAvailabilityValidator implements BookingRequestValidator
             return;
         }
 
-        carBookings.stream().forEach( existingBooking -> {
+        carBookings.stream().forEach(existingBooking -> {
             LocalTime driverBookedFrom = existingBooking.getBookingFrom().toLocalTime();
             LocalTime driverBookedTo = existingBooking.getBookingTo().toLocalTime();
             boolean isOverLapping = checKForOverlap(driverBookedFrom, driverBookedTo,

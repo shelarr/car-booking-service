@@ -16,7 +16,7 @@ public class JmsConfig {
 
     @Bean
     public JmsListenerContainerFactory<?> internalMessageFactory(ConnectionFactory connectionFactory,
-                                                    DefaultJmsListenerContainerFactoryConfigurer configurer) {
+                                                                 DefaultJmsListenerContainerFactoryConfigurer configurer) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         configurer.configure(factory, connectionFactory);
         return factory;

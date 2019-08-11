@@ -13,13 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookingMessageReceiver {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingMessageReceiver.class);
     @Autowired
     private CarBookingMessageProcessor processor;
-
     @Autowired
     private CarBookingService carBookingService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookingMessageReceiver.class);
 
     @JmsListener(destination = "bookingMessagesBuffer", containerFactory = "internalMessageFactory")
     public void receiveMessage(CarBookingMessage bookingMessage) {

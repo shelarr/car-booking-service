@@ -74,8 +74,8 @@ public class BookingTimeAvailabilityValidatorTest {
     @Test(expected = BookingProcessingExcpetion.class)
     public void testValidate_WhenDriverIsAlreadyBookedInRequestedTimeSlot() {
         CarBooking carBooking = new CarBooking();
-        carBooking.setBookingFrom(new Time(13,00,00));
-        carBooking.setBookingTo(new Time(15,00,00));
+        carBooking.setBookingFrom(new Time(13, 00, 00));
+        carBooking.setBookingTo(new Time(15, 00, 00));
         List<CarBooking> carBookings = new ArrayList<>();
         carBookings.add(carBooking);
         when(carAllotmentService.getAllotmentDetails("1213")).thenReturn(carAllotment);
