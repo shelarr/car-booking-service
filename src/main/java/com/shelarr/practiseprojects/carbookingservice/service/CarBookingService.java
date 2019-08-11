@@ -2,12 +2,13 @@ package com.shelarr.practiseprojects.carbookingservice.service;
 
 import com.shelarr.practiseprojects.carbookingservice.controller.CarAllotmentController;
 import com.shelarr.practiseprojects.carbookingservice.dao.CarBookingsDao;
-import com.shelarr.practiseprojects.carbookingservice.databuilder.BookingDataBuilder;
 import com.shelarr.practiseprojects.carbookingservice.dto.BookingStatus;
 import com.shelarr.practiseprojects.carbookingservice.dto.CarBooking;
 import com.shelarr.practiseprojects.carbookingservice.exception.BookingProcessingExcpetion;
+import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessage;
+import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessageDispatcher;
 import com.shelarr.practiseprojects.carbookingservice.request.CarBookingRequest;
-import com.shelarr.practiseprojects.carbookingservice.request.validator.BookingRequestValidator;
+import com.shelarr.practiseprojects.carbookingservice.util.mapper.CarBookingDataMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,43 +26,49 @@ public class CarBookingService {
     @Autowired
     private CarBookingsDao carBookingsDao;
 
-    @Resource(name = "requestValidators")
-    private List<BookingRequestValidator> requestValidators;
+    @Resource
+    private CarBookingDataMapper carBookingDataMapper;
 
-    @Resource(name = "bookingDataBuilders")
-    private List<BookingDataBuilder> bookingDataBuilders;
+    @Resource(name = "carBookingMessageDispatcher")
+    private CarBookingMessageDispatcher dispatcher;
 
     public String createBooking(CarBookingRequest request) {
-        try {
-            requestValidators.stream().forEach(
-                    bookingRequestValidator -> bookingRequestValidator.validate(request)
-            );
+        CarBooking carBooking = carBookingDataMapper.mapToDto(request);
+        String bookingId = saveBookingRequestData(carBooking);
+        CarBookingMessage bookingMessage = new CarBookingMessage(bookingId, carBooking);
+        dispatcher.dispatchForProcessing(bookingMessage);
+        return bookingId;
+    }
 
-            CarBooking carBooking = new CarBooking();
+    public List<CarBooking> getAllActiveBookings() {
+        return carBookingsDao.findAllActive();
+    }
 
-            bookingDataBuilders.stream().forEach(
-                    dataBuilder -> dataBuilder.populate(request, carBooking)
-            );
-
-            LOGGER.info("CarBooking Details: " + carBooking.toString());
-            carBookingsDao.insert(carBooking);
-            return String.valueOf(carBookingsDao.fetchBookingId(carBooking).getId());
-        } catch (Exception ex) {
-            LOGGER.error("Booking Request can not be processed at specified time for Driver. Reason : " + ex.getMessage());
-            throw new BookingProcessingExcpetion("Booking Request can not be processed at specified time for Driver. Reason : " + ex.getMessage());
-        }
+    public List<CarBooking> getAllActiveBookingsForDriver(Long driverId) {
+        return carBookingsDao.findAllActiveForDriver(driverId);
     }
 
     public List<CarBooking> getAllBookings() {
         return carBookingsDao.findAll();
     }
 
+    public CarBooking getBookingById(String bookingId) {
+        return carBookingsDao.findBookingById(Long.valueOf(bookingId));
+    }
+
     public boolean changeBookingStatus(String bookingId, String bookingStatus) {
+
         if (!StringUtils.isEmpty(BookingStatus.getStatus(bookingStatus))) {
-            return carBookingsDao.changeBookingStatus(bookingId, bookingStatus) != 0 ? true : false;
+            boolean isActive = BookingStatus.getActive(bookingStatus);
+            return carBookingsDao.changeBookingStatus(bookingId, bookingStatus, isActive) != 0 ? true : false;
         } else {
             throw new BookingProcessingExcpetion("Invalid Status !");
         }
+    }
+
+    private String saveBookingRequestData(CarBooking carBooking) {
+        carBookingsDao.insert(carBooking);
+        return String.valueOf(carBookingsDao.fetchBookingId(carBooking).getId());
     }
 
 }

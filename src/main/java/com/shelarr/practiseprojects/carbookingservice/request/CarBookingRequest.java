@@ -1,8 +1,6 @@
 package com.shelarr.practiseprojects.carbookingservice.request;
 
 import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public final class CarBookingRequest {
 
@@ -39,10 +37,8 @@ public final class CarBookingRequest {
 
     private Time convertToTime(String timeString) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:MM");
-            long time = sdf.parse(timeString).getTime();
-            return new Time(time);
-        } catch (ParseException ex) {
+            return Time.valueOf(timeString);
+        } catch (Exception ex) {
             throw new RuntimeException("Invalid format for booking time");
         }
     }

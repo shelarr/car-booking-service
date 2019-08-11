@@ -12,20 +12,14 @@ public class BookingDataBuilderConfig {
     @Bean
     public List<BookingDataBuilder> bookingDataBuilders() {
         List<BookingDataBuilder> bookingDataBuilders = new ArrayList<>();
-        bookingDataBuilders.add(bookingTimingDataBuilder());
+        bookingDataBuilders.add(bookingChargeDataBuilder());
         bookingDataBuilders.add(dealerAndCarDataBuilder());
-        bookingDataBuilders.add(defaultBookingDataBuilder());
         return bookingDataBuilders;
     }
 
     @Bean
-    public BookingDataBuilder bookingTimingDataBuilder() {
-        return new BookingTimingDataBuilder();
-    }
-
-    @Bean
-    public BookingDataBuilder defaultBookingDataBuilder() {
-        return new DefaultBookingDataBuilder();
+    public BookingDataBuilder bookingChargeDataBuilder() {
+        return new BookingChargeDataBuilder();
     }
 
     @Bean

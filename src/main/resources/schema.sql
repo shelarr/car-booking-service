@@ -51,15 +51,15 @@ DROP TABLE IF EXISTS CAR_BOOKINGS;
 CREATE TABLE CAR_BOOKINGS (
   id INT AUTO_INCREMENT PRIMARY KEY,
   userIdName VARCHAR(250) NOT NULL,
-  carId INT NOT NULL,
-  carRegNumber VARCHAR(250) NOT NULL,
   driverId INT NOT NULL,
-  driverName VARCHAR(250) NOT NULL,
-  driverLicenseNumber VARCHAR(250) NOT NULL,
   bookingFrom TIME NOT NULL,
   bookingTo TIME NOT NULL,
-  bookingCharge DECIMAL,
-  isActive BOOLEAN,
+  isActive BOOLEAN NOT NULL,
   bookingStatus VARCHAR(250) NOT NULL,
-  CONSTRAINT user_booking UNIQUE (userIdName, isActive)
+  carId INT,
+  carRegNumber VARCHAR(250),
+  driverName VARCHAR(250),
+  driverLicenseNumber VARCHAR(250),
+  bookingCharge DECIMAL,
+  CONSTRAINT user_booking UNIQUE (userIdName, bookingStatus, isActive)
 );

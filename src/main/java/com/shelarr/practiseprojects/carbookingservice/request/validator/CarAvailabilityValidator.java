@@ -27,13 +27,12 @@ public class CarAvailabilityValidator {
             return true;
         }
 
-        for (CarAllotment carAllotment : carAllotments) {
+        carAllotments.stream().forEach( carAllotment -> {
 
             LocalTime carAllotmentFrom = carAllotment.getDriverAvailableFrom().toLocalTime();
             LocalTime carAllotmentTo = carAllotment.getDriverAvailableTo().toLocalTime();
             LocalTime driverAvailableFrom = driver.getAvailableFrom().toLocalTime();
             LocalTime driverAvailableTo = driver.getAvailableTo().toLocalTime();
-
             boolean isOverLapping = checKForOverlap(carAllotmentFrom, carAllotmentTo,
                     driverAvailableFrom, driverAvailableTo);
 
@@ -41,7 +40,7 @@ public class CarAvailabilityValidator {
                 throw new AllocationProcessingException(ALLOCATION_SLOT_NOT_AVAILABLE);
             }
 
-        }
+        });
 
         return true;
     }

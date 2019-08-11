@@ -1,8 +1,7 @@
 package com.shelarr.practiseprojects.carbookingservice.databuilder;
 
 import com.shelarr.practiseprojects.carbookingservice.dto.CarAllotment;
-import com.shelarr.practiseprojects.carbookingservice.dto.CarBooking;
-import com.shelarr.practiseprojects.carbookingservice.request.CarBookingRequest;
+import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessage;
 import com.shelarr.practiseprojects.carbookingservice.service.CarAllotmentService;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.sql.Time;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,27 +26,26 @@ public class DealerAndCarDataBuilderTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         CarAllotment carAllotment = createCarAllotment();
-        Mockito.when(carAllotmentService.getAllotmentDetails("121313")).thenReturn(carAllotment);
+        Mockito.when(carAllotmentService.getAllotmentDetails("31313")).thenReturn(carAllotment);
     }
 
     @Test
     public void testPopulate() {
-        CarBookingRequest request = CarBookingRequest.Builder
-                .newInstance()
-                .setDriverId("121313")
-                .setUserIdName("534121")
-                .setBookingFrom("14:00")
-                .setBookingTo("17:00")
-                .build();
 
-        CarBooking bookingData = new CarBooking();
-        builder.populate(request, bookingData);
+        CarBookingMessage bookingMessage = new CarBookingMessage();
 
-        assertEquals(212l, bookingData.getCarId().longValue());
-        assertEquals("MH23LK32323", bookingData.getCarRegNumber());
-        assertEquals(31313l, bookingData.getDriverId().longValue());
-        assertEquals("John Doe", bookingData.getDriverName());
-        assertEquals("212113311", bookingData.getDriverLicenseNumber());
+        bookingMessage.getCarBooking().setDriverId(31313l);
+        bookingMessage.getCarBooking().setUserIdName("user2");
+        bookingMessage.getCarBooking().setBookingFrom(new Time(14, 00, 00));
+        bookingMessage.getCarBooking().setBookingTo(new Time(17, 00, 00));
+
+        builder.populate(bookingMessage);
+
+        assertEquals(212l, bookingMessage.getCarBooking().getCarId().longValue());
+        assertEquals("MH23LK32323", bookingMessage.getCarBooking().getCarRegNumber());
+        assertEquals(31313l, bookingMessage.getCarBooking().getDriverId().longValue());
+        assertEquals("John Doe", bookingMessage.getCarBooking().getDriverName());
+        assertEquals("212113311", bookingMessage.getCarBooking().getDriverLicenseNumber());
     }
 
     private CarAllotment createCarAllotment() {

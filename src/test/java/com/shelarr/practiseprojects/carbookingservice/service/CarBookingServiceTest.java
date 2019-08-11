@@ -1,16 +1,17 @@
 package com.shelarr.practiseprojects.carbookingservice.service;
 
 import com.shelarr.practiseprojects.carbookingservice.dao.CarBookingsDao;
-import com.shelarr.practiseprojects.carbookingservice.databuilder.BookingDataBuilder;
 import com.shelarr.practiseprojects.carbookingservice.dto.CarBooking;
 import com.shelarr.practiseprojects.carbookingservice.exception.BookingProcessingExcpetion;
+import com.shelarr.practiseprojects.carbookingservice.messaging.CarBookingMessageDispatcher;
 import com.shelarr.practiseprojects.carbookingservice.request.CarBookingRequest;
-import com.shelarr.practiseprojects.carbookingservice.request.validator.BookingRequestValidator;
+import com.shelarr.practiseprojects.carbookingservice.util.mapper.CarBookingDataMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -24,10 +25,9 @@ public class CarBookingServiceTest {
     private CarBookingsDao carBookingsDao;
 
     @Mock
-    private List<BookingRequestValidator> requestValidators;
+    private CarBookingMessageDispatcher dispatcher;
 
-    @Mock
-    private List<BookingDataBuilder> bookingDataBuilders;
+    private CarBookingDataMapper carBookingDataMapper = new CarBookingDataMapper();
 
     @InjectMocks
     private CarBookingService carBookingService = new CarBookingService();
@@ -37,13 +37,14 @@ public class CarBookingServiceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(carBookingService, "carBookingDataMapper", carBookingDataMapper);
 
         carBookingRequest = CarBookingRequest.Builder
                 .newInstance()
                 .setDriverId("13131")
                 .setUserIdName("user2Id")
-                .setBookingFrom("14:00")
-                .setBookingTo("16:00")
+                .setBookingFrom("14:00:00")
+                .setBookingTo("16:00:00")
                 .build();
     }
 
@@ -58,16 +59,6 @@ public class CarBookingServiceTest {
         assertEquals("543", bookingIdResponse);
     }
 
-
-    @Test(expected = BookingProcessingExcpetion.class)
-    public void testCreateBooking_WhenProcessingException() {
-        when(carBookingsDao.fetchBookingId(any(CarBooking.class))).thenThrow(RuntimeException.class);
-
-        String bookingIdResponse = carBookingService.createBooking(carBookingRequest);
-        assertEquals("543", bookingIdResponse);
-
-    }
-
     @Test
     public void testGetAllBookings() {
         List<CarBooking> carBookings = mock(List.class);
@@ -80,12 +71,12 @@ public class CarBookingServiceTest {
 
     @Test
     public void testChangeBookingStatus() {
-        when(carBookingsDao.changeBookingStatus("1233", "CONFIRMED")).thenReturn(1);
+        when(carBookingsDao.changeBookingStatus("1233", "CONFIRMED", true)).thenReturn(1);
 
         boolean success = carBookingService.changeBookingStatus("1233", "CONFIRMED");
 
         assertTrue(success);
-        verify(carBookingsDao, times(1)).changeBookingStatus("1233", "CONFIRMED");
+        verify(carBookingsDao, times(1)).changeBookingStatus("1233", "CONFIRMED", true);
     }
 
     @Test(expected = BookingProcessingExcpetion.class)

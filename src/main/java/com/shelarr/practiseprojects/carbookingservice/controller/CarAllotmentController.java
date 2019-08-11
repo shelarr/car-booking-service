@@ -25,7 +25,9 @@ public class CarAllotmentController {
     private static final String SUCCESS_RESPONSE = "{\"status\":\"success\"}";
 
     private static final String FAILURE_RESPONSE = "{\"status\":\"failure\"}";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CarAllotmentController.class);
+
     @Autowired
     private CarAllotmentService carAllotmentService;
 
