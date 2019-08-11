@@ -5,7 +5,7 @@
 -----------------------------------------------------------
 >mvn spring-boot:run
 
-This would start the application on localhost:8080/evn-asset
+This would start the application on http://localhost:8080 or http://localhost:8080/swagger-ui.html
 
 
 *Command to run all the tests*
