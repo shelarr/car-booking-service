@@ -33,6 +33,7 @@ public class CarBookingController {
 
     private static final String CHECK_FOR_CONFIRMATION = "Check here for Confirmation status.";
     private static final String baseDomainUrl = "http://localhost:8080/";
+
     @Autowired
     private CarBookingService carBookingService;
 

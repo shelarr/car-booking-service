@@ -21,7 +21,7 @@ This would start the application on 8080 port. accessible through http://localho
 -----------------------------------------------------------
 >e.g http://localhost:8080/actuator/info
 
-*H2S DB Console Path*
+*H2 DB Console Path*
 -----------------------------------------------------------
 >e.g http://localhost:8080/h2
 

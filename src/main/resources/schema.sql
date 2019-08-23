@@ -61,5 +61,5 @@ CREATE TABLE CAR_BOOKINGS (
   driverName VARCHAR(250),
   driverLicenseNumber VARCHAR(250),
   bookingCharge DECIMAL,
-  CONSTRAINT user_booking UNIQUE (userIdName, bookingStatus, isActive)
+  CONSTRAINT user_booking UNIQUE (userIdName, bookingStatus, isActive) 
 );

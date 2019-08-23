@@ -43,6 +43,7 @@ public class BookingTimeAvailabilityValidator implements BookingRequestValidator
         if (isTimeSlotAvailable(requestedFromTime, requestedToTime,
                 driverFromTime, driverToTime)) {
             LOGGER.info("Time Slot is available for carBooking request " + bookingMessage.toString());
+            System.out.println("Time Slot is available for carBooking request " + bookingMessage.toString());
         } else {
             LOGGER.info(DRIVER_NOT_AVAILABLE + bookingMessage.toString());
             throw new BookingProcessingExcpetion(DRIVER_NOT_AVAILABLE + bookingMessage.toString());
@@ -60,6 +61,7 @@ public class BookingTimeAvailabilityValidator implements BookingRequestValidator
             boolean isOverLapping = checKForOverlap(driverBookedFrom, driverBookedTo,
                     requestedFromTime, requestedToTime);
             if (isOverLapping) {
+                System.out.println(DRIVER_ALREADY_BOOKED_MESSAGE + bookingMessage.toString());
                 throw new BookingProcessingExcpetion(DRIVER_ALREADY_BOOKED_MESSAGE);
             }
         });
@@ -75,8 +77,8 @@ public class BookingTimeAvailabilityValidator implements BookingRequestValidator
 
     private boolean checKForOverlap(LocalTime driverBookedFrom, LocalTime driverBookedTo,
                                     LocalTime requestedFromTime, LocalTime requestedToTime) {
-        return (requestedFromTime.isAfter(driverBookedFrom) && requestedFromTime.isBefore(driverBookedTo)) ||
-                (requestedToTime.isAfter(driverBookedFrom) && requestedToTime.isBefore(driverBookedTo));
+        return (!requestedFromTime.isBefore(driverBookedFrom) && !requestedFromTime.isAfter(driverBookedTo)) ||
+                (!requestedToTime.isBefore(driverBookedFrom) && !requestedToTime.isAfter(driverBookedTo));
 
     }
 

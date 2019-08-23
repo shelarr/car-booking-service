@@ -22,7 +22,7 @@ public class CarBookingsDao {
             "userIdName = ? , carId = ?, carRegNumber = ?, driverId = ?, driverName = ?, driverLicenseNumber = ?, bookingFrom = ?, bookingTo = ?," +
             "bookingCharge = ?, isActive= ?, bookingStatus = ? where id = ?";
 
-    private static final String FIND_CAR_BOOKING = "select * from car_bookings where userIdName = ? and  isActive = ?";
+    private static final String FIND_CAR_BOOKING = "select * from car_bookings where userIdName = ? and  isActive = ? and bookingStatus = ?";
 
     private static final String FIND_CAR_BOOKING_BY_ID = "select * from car_bookings where id = ?";
 
@@ -55,7 +55,7 @@ public class CarBookingsDao {
 
 
     public CarBooking fetchBookingId(CarBooking carBooking) {
-        return jdbcTemplate.queryForObject(FIND_CAR_BOOKING, new Object[]{carBooking.getUserIdName(), carBooking.getActive()},
+        return jdbcTemplate.queryForObject(FIND_CAR_BOOKING, new Object[]{carBooking.getUserIdName(), carBooking.getActive(), carBooking.getBookingStatus()},
                 new BeanPropertyRowMapper<>(CarBooking.class));
     }
 
@@ -71,7 +71,7 @@ public class CarBookingsDao {
     public List<CarBooking> findAllActiveForDriver(Long driverId) {
         List<CarBooking> carBookings;
         try {
-            carBookings = jdbcTemplate.query(FIND_ALL_ACTIVE_BOOKINGS_FOR_DRIVER, new Object[]{driverId}, new CarBookingRowMapper());
+            carBookings = jdbcTemplate.query(FIND_ALL_ACTIVE_BOOKINGS_FOR_DRIVER, new Object[]{driverId}, new BeanPropertyRowMapper<>(CarBooking.class));
         } catch (Exception ex) {
             carBookings = new ArrayList<>();
         }
